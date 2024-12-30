@@ -5,7 +5,7 @@
 ##  Gradle start up script for UN*X
 ##
 ##############################################################################
-JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.25.0.9-3.el9.x86_64
+
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
