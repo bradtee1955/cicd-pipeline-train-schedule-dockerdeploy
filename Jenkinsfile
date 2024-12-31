@@ -58,7 +58,7 @@ pipeline {
             			echo "No existing container to stop or remove. Proceeding with deployment."
         		}
         		// Run the new Docker container
-        		sshCommand("docker run --restart always --name train-schedule -p 9080:8080 -d bradtee1955/train-schedule:${env.BUILD_NUMBER}")
+        		sshCommand("docker run --restart always --name train-schedule -p 9081:8080 -d bradtee1955/train-schedule:${env.BUILD_NUMBER}")
     		    }
 		}
 		/*
