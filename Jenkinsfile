@@ -43,6 +43,25 @@ pipeline {
             steps {
                 // input 'Deploy to Production?'
                 milestone(1)
+		withCredentials([sshUserPrivateKey(credentialsId: 'webserver_ssh_key', keyFileVariable: 'SSH_KEY')]) {
+    		script {
+        		def sshCommand = { String command ->
+            			sh """ ssh -i $SSH_KEY -o StrictHostKeyChecking=no $USERNAME@$prod_ip "$command" """
+        		}
+        		// Pull the Docker image
+        		sshCommand("docker pull bradtee1955/train-schedule:${env.BUILD_NUMBER}")
+        		// Stop and remove the existing container if it exists
+        		try {
+            			sshCommand("docker stop train-schedule")
+            			sshCommand("docker rm train-schedule")
+        		} catch (err) {
+            			echo "No existing container to stop or remove. Proceeding with deployment."
+        		}
+        		// Run the new Docker container
+        		sshCommand("docker run --restart always --name train-schedule -p 9080:8080 -d bradtee1955/train-schedule:${env.BUILD_NUMBER}")
+    		    }
+		}
+		/*
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     script {
                         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull bradtee1955/train-schedule:${env.BUILD_NUMBER}\""
@@ -54,7 +73,8 @@ pipeline {
                         }
                         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker run --restart always --name train-schedule -p 9080:8080 -d bradtee1955/train-schedule:${env.BUILD_NUMBER}\""
                     }
-                }
+                } 
+		*/
             }
         }
     }
