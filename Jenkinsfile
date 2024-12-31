@@ -43,7 +43,7 @@ pipeline {
             steps {
                 // input 'Deploy to Production?'
                 milestone(1)
-		withCredentials([sshUserPrivateKey(credentialsId: 'webserver_ssh_key', keyFileVariable: 'SSH_KEY')]) {
+		withCredentials([sshUserPrivateKey(credentialsId: 'webserver_ssh_key', keyFileVariable: 'SSH_KEY', usernameVariable: 'USERNAME')]) {
     		script {
         		def sshCommand = { String command ->
             			sh """ ssh -i $SSH_KEY -o StrictHostKeyChecking=no $USERNAME@$prod_ip "$command" """
